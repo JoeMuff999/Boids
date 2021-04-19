@@ -126,6 +126,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 5
-  rotationSpeed: 60
+  rotationSpeed: 30
   offScreenPadding: 0.5
-  neighborhoodRadius: 2
+  neighborhoodRadius: 5
+  separationRadius: 1
+  separationWeight: 1
+  alignmentWeight: 1
+  cohesionWeight: 1
