@@ -26,6 +26,7 @@ public struct BoidDefinition{
     }
     public BoidDefinition(BoidDefinition bp, int id)
     {
+
         this.position = new Vector2(bp.position.x, bp.position.y);
         this.heading = bp.heading;
         this.velocity = bp.velocity;
@@ -93,8 +94,10 @@ public class AgentManager : MonoBehaviour
 
     public static void RegisterAgent(Agent agent)
     {
+        agent.boidDefinition = new BoidDefinition(agent.boidDefinition, agentCount);//assign id here
         agents.Add(agent);
-        currentStates.Add(new BoidDefinition(agent.boidDefinition, agentCount)); //assign id here
+        currentStates.Add(new BoidDefinition(agent.boidDefinition));
+        // Debug.Log(currentStates[currentStates.Count-1].id);
         agentCount++;
     }
 
@@ -106,7 +109,6 @@ public class AgentManager : MonoBehaviour
         currentStates = new List<BoidDefinition>();
         foreach(Agent agent in agents)
         {
-            Debug.Log(agent.boidDefinition.id);
             currentStates.Add(new BoidDefinition(agent.boidDefinition));
         }
     }   

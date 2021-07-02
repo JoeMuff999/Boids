@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 3
-  rotationSpeed: 360
+  rotationSpeed: 180
   offScreenPadding: 0.5
   neighborhoodRadius: 1.5
   separationRadius: 1

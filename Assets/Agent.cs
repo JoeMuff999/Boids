@@ -1,4 +1,4 @@
-﻿    using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -62,7 +62,7 @@ public class Agent : MonoBehaviour
                 float y_diff = boidDef.position.y - this.boidDefinition.position.y;
                 float mag = Mathf.Sqrt(x_diff*x_diff + y_diff*y_diff);
                 // Debug.Log(mag);
-                Debug.Log(boidDef.position.x + " " + this.boidDefinition.position.x);
+                // Debug.Log(boidDef.position.x + " " + this.boidDefinition.position.x);
 
                 //multiply by inverse of direction difference to weigh closer things more heavily
                 x_influence += x_diff/mag * Mathf.Clamp(1.0f/x_diff * 1.0f/x_diff, 0, 100);
@@ -129,7 +129,7 @@ public class Agent : MonoBehaviour
     private float accelSeparation(List<BoidDefinition> neighborhood)
     {
         //calculate relative velocities between all neighbors. 
-
+        
         return 0.0f;
     }
 
