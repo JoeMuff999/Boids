@@ -155,7 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee5b4d9c7eb68104d82cc2ab5e57d0a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 3
+  movementSpeed: 5
   rotationSpeed: 180
   offScreenPadding: 0.5
   neighborhoodRadius: 1.5
