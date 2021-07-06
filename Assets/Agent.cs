@@ -5,9 +5,12 @@ using UnityEngine.Assertions;
 public class Agent : MonoBehaviour
 {
     [SerializeField]
-    private float movementSpeed;
+    private float maxSpeed;
     [SerializeField]
     private float rotationSpeed;
+
+    [SerializeField]
+    private float maxAcceleration;
 
     public BoidDefinition boidDefinition;
 
@@ -32,7 +35,7 @@ public class Agent : MonoBehaviour
 
     private void Start()
     {
-        boidDefinition = new BoidDefinition(transform.position.x, transform.position.y, transform.eulerAngles.z, movementSpeed);
+        boidDefinition = new BoidDefinition(transform.position.x, transform.position.y, transform.eulerAngles.z, maxSpeed);
         AgentManager.RegisterAgent(this);
     }
 
@@ -126,13 +129,42 @@ public class Agent : MonoBehaviour
         }
         return neighborhood;
     }
+
+    private Vector2 accelAlignment(List<BoidDefinition> neighborhood)
+    {
+        Vector2 sum = new Vector2(0, 0);
+        int count = 0;
+        foreach(BoidDefinition boid in neighborhood)
+        {
+            float d = Vector2.Distance(this.boidDefinition.position, boid.position);
+            sum += boid.velocity;
+            count++;
+        }
+        if (count > 0)
+        {
+            sum /= ((float)count);
+            // First two lines of code below could be condensed with new PVector setMag() method
+            // Not using this method until Processing.js catches up
+            // sum.setMag(maxspeed);
+
+            // Implement Reynolds: Steering = Desired - Velocity
+            sum.Normalize();
+            sum *= maxSpeed; //TODO: figure this out lol
+            Vector2 steer = sum - this.boidDefinition.velocity;
+            steer = Vector2.ClampMagnitude(steer, 1f);
+            return steer;
+        }
+        else
+        {
+            return new Vector2(0, 0);
+        }
+    }
     //all need to agree who will decelerate
     private Vector2 accelSeparation(List<BoidDefinition> neighborhood)
     {
-        //calculate relative velocities between all neighbors. 
         Vector2 steer = new Vector2(0, 0);
         int count = 0;
-        // For every boid in the system, check if it's too close
+        // For every boid in the neighborhood, check if it's too close
         foreach (BoidDefinition boidDef in neighborhood)
         {
             float d = Vector2.Distance(this.boidDefinition.position, boidDef.position);
@@ -162,9 +194,9 @@ public class Agent : MonoBehaviour
 
             // Implement Reynolds: Steering = Desired - Velocity
             steer.Normalize();
-            steer *= movementSpeed;
+            steer *= maxSpeed;
             steer -= this.boidDefinition.velocity;
-            Vector2.ClampMagnitude(steer, .1f);
+            steer = Vector2.ClampMagnitude(steer, 1f);
         }
         return steer;
         // return 0.0f;
@@ -178,7 +210,7 @@ public class Agent : MonoBehaviour
         List<BoidDefinition> neighborhood = getNeighborhood(bds);
         // float deltaAngle = separationWeight * separation(neighborhood) + alignmentWeight * alignment(neighborhood);
         float deltaAngle = 0.0f;
-        Vector2 deltaAccel = accelSeparation(neighborhood);
+        Vector2 deltaAccel = separationWeight * accelSeparation(neighborhood) + alignmentWeight * accelAlignment(neighborhood);
         // float deltaAngle = separationWeight * separation(neighborhood);
 
         // float deltaAngle = alignmentWeight * alignment(neighborhood) + separationWeight * separation(neighborhood) + cohesionWeight * cohesion(neighborhood);
@@ -190,12 +222,17 @@ public class Agent : MonoBehaviour
         // Debug.Log(deltaAngle);
         // transform.Rotate(0, 0, deltaAngle, Space.World);
         // float total_movement = movementSpeed * Time.deltaTime;
+        deltaAccel = Vector2.ClampMagnitude(deltaAccel, maxAcceleration);
         this.boidDefinition.velocity += deltaAccel;
+
+        this.boidDefinition.velocity = Vector2.ClampMagnitude(this.boidDefinition.velocity, maxSpeed);
         Vector2 total_movement = this.boidDefinition.velocity * Time.deltaTime;
-        Debug.Log(this.boidDefinition.velocity);
+        // Debug.Log(this.boidDefinition.velocity);
+        // Debug.Log(deltaAccel);
+
 
         transform.Translate(total_movement, Space.World);
-        transform.eulerAngles = new Vector3(0,0,Mathf.Atan2(this.boidDefinition.velocity.y, this.boidDefinition.velocity.x) * Mathf.Rad2Deg);
+        transform.eulerAngles = new Vector3(0, 0, Mathf.Atan2(this.boidDefinition.velocity.y, this.boidDefinition.velocity.x) * Mathf.Rad2Deg);
         // transform.Translate(total_movement * Vector3.right);
 
 

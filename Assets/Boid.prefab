@@ -155,12 +155,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee5b4d9c7eb68104d82cc2ab5e57d0a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
+  maxSpeed: 4
   rotationSpeed: 180
+  maxAcceleration: 0.01
   offScreenPadding: 0.5
-  neighborhoodRadius: 1.5
+  neighborhoodRadius: 2
   separationRadius: 1
-  separationWeight: 1
+  separationWeight: 1.5
   alignmentWeight: 1
   cohesionWeight: 1
 --- !u!54 &6227143057213911215
