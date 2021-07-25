@@ -159,11 +159,12 @@ MonoBehaviour:
   rotationSpeed: 180
   maxAcceleration: 0.01
   offScreenPadding: 0.5
-  neighborhoodRadius: 2
+  neighborhoodRadius: 3
   separationRadius: 1
-  separationWeight: 1.5
+  separationWeight: 2
   alignmentWeight: 1
   cohesionWeight: 1
+  OOBCollisionProtection: 0.5
 --- !u!54 &6227143057213911215
 Rigidbody:
   m_ObjectHideFlags: 0

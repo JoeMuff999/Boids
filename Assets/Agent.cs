@@ -31,6 +31,9 @@ public class Agent : MonoBehaviour
     [SerializeField]
     private float cohesionWeight;
 
+    [SerializeField]
+    private float OOBCollisionProtection = .5f;
+
     private bool OOB = false;
 
     private void Start()
@@ -151,7 +154,7 @@ public class Agent : MonoBehaviour
             sum.Normalize();
             sum *= maxSpeed; //TODO: figure this out lol
             Vector2 steer = sum - this.boidDefinition.velocity;
-            steer = Vector2.ClampMagnitude(steer, 1f);
+            // steer = Vector2.ClampMagnitude(steer, 1f);
             return steer;
         }
         else
@@ -196,7 +199,7 @@ public class Agent : MonoBehaviour
             steer.Normalize();
             steer *= maxSpeed;
             steer -= this.boidDefinition.velocity;
-            steer = Vector2.ClampMagnitude(steer, 1f);
+            // steer = Vector2.ClampMagnitude(steer, 1f);
         }
         return steer;
         // return 0.0f;
@@ -257,14 +260,17 @@ public class Agent : MonoBehaviour
         }
     }
 
+    private float OOB_start_time;
     private void reflectPosition()
     {
         if (OOBX())
         {
+            OOB_start_time = Time.time;
             transform.position = new Vector3(transform.position.x * -1, transform.position.y, 0);
         }
         else if (OOBY())
         {
+            OOB_start_time = Time.time;
             transform.position = new Vector3(transform.position.x, transform.position.y * -1, 0);
         }
         //should never happen
@@ -293,7 +299,10 @@ public class Agent : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-        Debug.Log("Collision!");
+        if(Time.time - OOB_start_time > OOBCollisionProtection)
+            Debug.Log("Collision!");
+        else
+            Debug.Log("Collision (OOB)");
     }
 
 }
